@@ -88,21 +88,23 @@ public class GraphBuilder {
     private static Graph Arbre_n_aire_complet(int height, int nb_child) {
         Graph graph = new SingleGraph("Arbre n-aire");
 
-        createChild(height, nb_child, graph, -1);
+        graph.addNode(Integer.toString(height + 1) + "0");
+
+        createChild(height, nb_child, graph, Integer.toString(height + 1) + "0");
         return graph;
     }
 
-    private static void createChild(int height, int nb_child, Graph graph, int num_child) {
+    private static void createChild(int height, int nb_child, Graph graph, String id) {
         if (height <= 0) return;
 
         for (int i = 0; i < nb_child; i++) {
-            graph.addNode(Integer.toString(height) + Integer.toString(i));
+            graph.addNode(id + Integer.toString(i));
         }
 
         for (int i = 0; i < nb_child; i++) {
-            graph.addEdge(Integer.toString(height) + Integer.toString(i) + Integer.toString(height), Integer.toString(height) + Integer.toString(num_child), Integer.toString(height) + Integer.toString(i));
+            graph.addEdge("E" + id + Integer.toString(i), id, id + Integer.toString(i));
 
-            createChild(height - 1, nb_child, graph, i);
+            createChild(height - 1, nb_child, graph, id + Integer.toString(i));
         }
     }
 
