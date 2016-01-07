@@ -16,6 +16,8 @@ public class MainFrame extends JFrame {
     private GridBagConstraints cont;
 
     private ChoicePanel choicePanel;
+    private ActionsPanel actionsPanel;
+    private AlgoPanel algoPanel;
     private GraphView graphView;
 
     public MainFrame() {
@@ -31,6 +33,8 @@ public class MainFrame extends JFrame {
 
         this.graphView = new GraphView();
         this.choicePanel = new ChoicePanel(this, graphView);
+        this.actionsPanel = new ActionsPanel(this, graphView);
+        this.algoPanel = new AlgoPanel(this, graphView);
 
         cont.gridx = 0;
         cont.gridy = 0;
@@ -40,6 +44,12 @@ public class MainFrame extends JFrame {
         cont.gridx = 1;
         cont.gridheight = 1;
         this.add(choicePanel, cont);
+
+        cont.gridx = 2;
+        this.add(actionsPanel, cont);
+
+        cont.gridx = 3;
+        this.add(algoPanel, cont);
 
         this.setVisible(true);
         this.pack();
@@ -179,7 +189,6 @@ public class MainFrame extends JFrame {
             }
         }
     }
-
 
     public class AlgoPanel extends JPanel implements ActionListener {
 
