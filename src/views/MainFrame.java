@@ -14,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -195,7 +196,12 @@ public class MainFrame extends JFrame {
 
                     document.open();
                     document.addTitle("Export To PDF | POO TP5 | Marc-Antoine FERNANDES");
-                    document.add(new Paragraph("Informations sur le graphe"));
+                    Paragraph title = new Paragraph("Informations sur le graphe");
+                    title.setAlignment(Paragraph.ALIGN_CENTER);
+                    title.getFont().setSize(24f);
+
+                    document.add(title);
+                    document.add(new Paragraph(""));
                     document.add(new Paragraph("Nom: " + graphPanel.getName()));
                     document.add(new Paragraph("Degré moyen: " + graphPanel.getAVG()));
                     document.add(new Paragraph("Degré maxi: " + graphPanel.getMax()));
@@ -204,12 +210,20 @@ public class MainFrame extends JFrame {
                     document.add(convertBmp);
                     document.close();
 
+                    if (Desktop.isDesktopSupported()) {
+                        try {
+                            File myFile = new File("Export.pdf");
+                            Desktop.getDesktop().open(myFile);
+                        } catch (IOException ex) {
+                            System.out.println("Please install a PDF Reader");
+                        }
+                    }
+
 
                 } catch (IOException | DocumentException e1) {
                     e1.printStackTrace();
                 }
 
-                // TODO Export to PDF
             } else if (e.getSource() == pondBtn) {
                 graphPanel.setRandomWeight();
             }

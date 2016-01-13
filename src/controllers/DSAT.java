@@ -16,7 +16,7 @@ public class DSAT {
     private ArrayList<Color> colors;
 
     public DSAT() {
-        this.colors = getUniqueColors(50);
+        this.colors = getUniqueColors(20);
     }
 
     public void init(Graph graph) {
@@ -97,7 +97,7 @@ public class DSAT {
 
         while (iterator.hasNext()) {
             Node childNode = iterator.next();
-            if (!listColor.contains(childNode.getAttribute("color"))) listColor.add(childNode.getAttribute("color"));
+            if (!listColor.contains(childNode.getAttribute("dsat.color"))) listColor.add(childNode.getAttribute("dsat.color"));
         }
 
         for (Color c : this.colors) {
@@ -139,7 +139,7 @@ public class DSAT {
 
         while (iterator.hasNext()) {
             Node n = iterator.next();
-            if (!listColor.contains(n.getAttribute("color"))) listColor.add(n.getAttribute("color"));
+            if (!listColor.contains(n.getAttribute("dsat.color"))) listColor.add(n.getAttribute("dsat.color"));
         }
 
         return listColor.size();
