@@ -221,6 +221,11 @@ public class MainFrame extends JFrame {
         private JButton firstBtn;
         private JButton secondBtn;
         private JButton thirdBtn;
+
+        private JLabel secondBtnLabel;
+        private JLabel thirdBtnLabel;
+
+
         private GraphView graphPanel;
         private MainFrame mainFrame;
 
@@ -241,27 +246,42 @@ public class MainFrame extends JFrame {
             this.secondBtn = new JButton("Welsh-Powell");
             this.thirdBtn = new JButton("DSat");
 
+            this.secondBtnLabel = new JLabel("");
+            this.thirdBtnLabel = new JLabel("");
+
             this.firstBtn.addActionListener(this);
             this.secondBtn.addActionListener(this);
             this.thirdBtn.addActionListener(this);
 
             this.cont.gridy = 0;
+            this.cont.gridwidth = 2;
             this.add(firstBtn, cont);
+
+            this.cont.gridwidth = 1;
             this.cont.gridy = 1;
+            this.cont.gridx = 0;
             this.add(secondBtn, cont);
+
+            this.cont.gridx = 1;
+            this.add(secondBtnLabel, cont);
+
             this.cont.gridy = 2;
+            this.cont.gridx = 0;
             this.add(thirdBtn, cont);
+
+            this.cont.gridx = 1;
+            this.add(thirdBtnLabel, cont);
         }
 
 
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == firstBtn) {
-                // TODO Arbre couvrant
+                graphPanel.algoAC();
             } else if (e.getSource() == secondBtn) {
-                // TODO Welsh-Powell
+                this.secondBtnLabel.setText(Integer.toString(graphPanel.algoWP()));
             } else if (e.getSource() == thirdBtn) {
-                // TODO DSat
+                this.thirdBtnLabel.setText(Integer.toString(graphPanel.algoDSat()));
             }
         }
     }

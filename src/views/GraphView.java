@@ -1,9 +1,13 @@
 package views;
 
+import controllers.DSAT;
 import controllers.GraphBuilder;
 import models.GraphsType;
+import org.graphstream.algorithm.Kruskal;
 import org.graphstream.algorithm.Toolkit;
+import org.graphstream.algorithm.coloring.WelshPowell;
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.graphstream.ui.swingViewer.View;
 import org.graphstream.ui.swingViewer.Viewer;
 
@@ -82,9 +86,48 @@ public class GraphView extends JPanel {
         int random;
 
         for(int i = 0; i < graph.getEdgeCount(); i++){
-            graph.getEdge(i).setAttribute("ui.label", (int)(Math.random() * (MAX_WEIGHT - 1)) + 1);
+            random = (int)(Math.random() * (MAX_WEIGHT - 1)) + 1;
+
+            graph.getEdge(i).setAttribute("weight", random);
+            graph.getEdge(i).setAttribute("ui.label", random);
         }
         this.repaint();
+    }
+
+    public void algoAC(){
+        Kruskal kruskal = new Kruskal("ui.class", "intree", "notintree");
+
+        kruskal.init(graph);
+        kruskal.compute();
+    }
+
+    public int algoWP(){
+
+        WelshPowell welshPowell = new WelshPowell("color");
+        welshPowell.init(graph);
+        welshPowell.compute();
+
+        Color[] cols = new Color[welshPowell.getChromaticNumber()];
+        for(int i=0;i< welshPowell.getChromaticNumber();i++){
+            cols[i]=Color.getHSBColor((float) (Math.random()), 0.8f, 0.9f);
+        }
+        for(Node n : graph){
+            int col = (int) n.getNumber("color");
+            n.addAttribute("ui.style", "fill-color:rgba("+cols[col].getRed()+","+cols[col].getGreen()+","+cols[col].getBlue()+",200);" );
+        }
+
+        this.repaint();
+        return welshPowell.getChromaticNumber();
+    }
+
+    public int algoDSat(){
+        DSAT dsat = new DSAT();
+
+        dsat.init(graph);
+        dsat.compute();
+        dsat.colorGraph();
+
+        return dsat.getChromaticNumber();
     }
 
     @Override

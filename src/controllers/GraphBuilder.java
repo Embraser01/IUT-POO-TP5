@@ -30,9 +30,17 @@ public class GraphBuilder {
         }
     }
 
+    private static void algoInit(Graph graph) {
+
+        String css = "edge .nointree {size:1px;fill-color:gray;} " +
+                "edge .intree {size:3px;fill-color:black;}";
+
+        graph.addAttribute("ui.stylesheet", css);
+    }
+
     private static Graph Cycle(int nb_sommets) {
         Graph graph = new SingleGraph("Cycle");
-
+        algoInit(graph);
         for (int i = 0; i < nb_sommets; i++) {
             graph.addNode(Integer.toString(i));
         }
@@ -46,7 +54,7 @@ public class GraphBuilder {
     private static Graph Chaine(int nb_sommets) {
 
         Graph graph = new SingleGraph("Chaine");
-
+        algoInit(graph);
         for (int i = 0; i < nb_sommets; i++) {
             graph.addNode(Integer.toString(i));
         }
@@ -60,7 +68,7 @@ public class GraphBuilder {
     private static Graph Tore(int taille) {
         Graph graph = new SingleGraph("grid");
         Generator gen = new GridGenerator(false, true);
-
+        algoInit(graph);
         gen.addSink(graph);
         gen.begin();
         for (int i = 0; i < taille; i++) {
@@ -75,7 +83,7 @@ public class GraphBuilder {
 
         Graph graph = new SingleGraph("grid");
         Generator gen = new GridGenerator();
-
+        algoInit(graph);
         gen.addSink(graph);
         gen.begin();
         for (int i = 0; i < taille_cote; i++) {
@@ -87,7 +95,7 @@ public class GraphBuilder {
 
     private static Graph Arbre_n_aire_complet(int height, int nb_child) {
         Graph graph = new SingleGraph("Arbre n-aire");
-
+        algoInit(graph);
         graph.addNode(Integer.toString(height + 1) + "0");
 
         createChild(height, nb_child, graph, Integer.toString(height + 1) + "0");
@@ -111,12 +119,14 @@ public class GraphBuilder {
     private static Graph Graphe_aleatoire(int nb_sommet, int degree) {
 
         Graph graph = new SingleGraph("Random");
+        algoInit(graph);
         Generator gen = new RandomGenerator(degree);
         gen.addSink(graph);
         gen.begin();
         for (int i = 0; i < nb_sommet; i++)
             gen.nextEvents();
         gen.end();
+
         return graph;
     }
 }
