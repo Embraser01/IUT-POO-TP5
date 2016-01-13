@@ -1,40 +1,39 @@
 package views;
 
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.codec.PngImage;
 import controllers.GraphBuilder;
 import models.GraphsType;
-import sun.applet.Main;
+import org.graphstream.stream.file.FileSinkImages;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Executable;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class MainFrame extends JFrame {
-
-    private GridBagConstraints cont;
-
-    private ChoicePanel choicePanel;
-    private ActionsPanel actionsPanel;
-    private AlgoPanel algoPanel;
-    private GraphView graphView;
 
     public MainFrame() {
 
         this.setTitle("TP5 Graphs - POO | Fernandes Marc-Antoine");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(new GridBagLayout());
-        this.cont = new GridBagConstraints();
-        this.cont.anchor = GridBagConstraints.NORTHWEST;
-        this.cont.fill = GridBagConstraints.BOTH;
+        GridBagConstraints cont = new GridBagConstraints();
+        cont.anchor = GridBagConstraints.NORTHWEST;
+        cont.fill = GridBagConstraints.BOTH;
 
         this.setLayout(new GridBagLayout());
 
-        this.graphView = new GraphView();
-        this.choicePanel = new ChoicePanel(this, graphView);
-        this.actionsPanel = new ActionsPanel(this, graphView);
-        this.algoPanel = new AlgoPanel(this, graphView);
+        GraphView graphView = new GraphView();
+        ChoicePanel choicePanel = new ChoicePanel(this, graphView);
+        ActionsPanel actionsPanel = new ActionsPanel(this, graphView);
+        AlgoPanel algoPanel = new AlgoPanel(this, graphView);
 
         cont.gridx = 0;
         cont.gridy = 0;
@@ -42,13 +41,14 @@ public class MainFrame extends JFrame {
         this.add(graphView, cont);
 
         cont.gridx = 1;
+        cont.gridy = 1;
         cont.gridheight = 1;
         this.add(choicePanel, cont);
 
-        cont.gridx = 2;
+        cont.gridy = 2;
         this.add(actionsPanel, cont);
 
-        cont.gridx = 3;
+        cont.gridy = 3;
         this.add(algoPanel, cont);
 
         this.setVisible(true);
@@ -137,7 +137,7 @@ public class MainFrame extends JFrame {
                 } catch (Exception ex) {
                 }
 
-                graphPanel.setGraph(GraphBuilder.make((GraphsType) choices.getSelectedItem(), var1, var2));
+                graphPanel.setGraph(GraphBuilder.make((GraphsType) choices.getSelectedItem(), var1, var2),(GraphsType) choices.getSelectedItem());
                 dialog.dispose();
             });
 
@@ -183,9 +183,35 @@ public class MainFrame extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == exportBtn) {
+
+                Document document = new Document();
+                FileSinkImages pic = new FileSinkImages(FileSinkImages.OutputType.PNG, FileSinkImages.Resolutions.VGA);
+                pic.setLayoutPolicy(FileSinkImages.LayoutPolicy.COMPUTED_FULLY_AT_NEW_IMAGE);
+                try {
+                    pic.writeAll(graphPanel.getGraph(), "tmp.png");
+                    com.itextpdf.text.Image convertBmp = PngImage.getImage("tmp.png");
+
+                    PdfWriter.getInstance(document, new FileOutputStream("Export.pdf"));
+
+                    document.open();
+                    document.addTitle("Export To PDF | POO TP5 | Marc-Antoine FERNANDES");
+                    document.add(new Paragraph("Informations sur le graphe"));
+                    document.add(new Paragraph("Nom: " + graphPanel.getName()));
+                    document.add(new Paragraph("Degré moyen: " + graphPanel.getAVG()));
+                    document.add(new Paragraph("Degré maxi: " + graphPanel.getMax()));
+                    document.add(new Paragraph("Degré min: " + graphPanel.getMin()));
+                    document.add(new Paragraph("Diamètre: " + graphPanel.getDiameter()));
+                    document.add(convertBmp);
+                    document.close();
+
+
+                } catch (IOException | DocumentException e1) {
+                    e1.printStackTrace();
+                }
+
                 // TODO Export to PDF
             } else if (e.getSource() == pondBtn) {
-                // TODO Pondérer
+                graphPanel.setRandomWeight();
             }
         }
     }
@@ -204,6 +230,12 @@ public class MainFrame extends JFrame {
             this.mainFrame = mainFrame;
             this.graphPanel = graphPanel;
             this.setBorder(BorderFactory.createTitledBorder("Algorithmes"));
+            this.setLayout(new GridBagLayout());
+
+            this.cont = new GridBagConstraints();
+            this.cont.anchor = GridBagConstraints.NORTHWEST;
+            this.cont.fill = GridBagConstraints.BOTH;
+
 
             this.firstBtn = new JButton("Arbre Couvrant");
             this.secondBtn = new JButton("Welsh-Powell");
@@ -213,9 +245,12 @@ public class MainFrame extends JFrame {
             this.secondBtn.addActionListener(this);
             this.thirdBtn.addActionListener(this);
 
-            this.add(firstBtn);
-            this.add(secondBtn);
-            this.add(thirdBtn);
+            this.cont.gridy = 0;
+            this.add(firstBtn, cont);
+            this.cont.gridy = 1;
+            this.add(secondBtn, cont);
+            this.cont.gridy = 2;
+            this.add(thirdBtn, cont);
         }
 
 
