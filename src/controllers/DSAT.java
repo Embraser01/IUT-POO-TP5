@@ -60,13 +60,15 @@ public class DSAT {
         int tmp;
 
         for (Node n : this.nodes) {
-            tmp = dSat(n);
-            if (tmp > maxDSAT) {
-                maxDSatNode.clear();
-                maxDSatNode.add(n);
-                maxDSAT = tmp;
-            } else if (tmp == maxDSAT) {
-                maxDSatNode.add(n);
+            if(n.getAttribute("color") == null) {
+                tmp = dSat(n);
+                if (tmp > maxDSAT) {
+                    maxDSatNode.clear();
+                    maxDSatNode.add(n);
+                    maxDSAT = tmp;
+                } else if (tmp == maxDSAT) {
+                    maxDSatNode.add(n);
+                }
             }
         }
 
@@ -150,7 +152,7 @@ public class DSAT {
         while (iterator.hasNext()) {
             Node n = iterator.next();
             Color c = n.getAttribute("color");
-            n.setAttribute("ui.color", "fill-color:rgba(" + c.getRed() + "," + c.getGreen() + "," + c.getBlue() + ",200);");
+            n.setAttribute("ui.style", "fill-color:rgba(" + c.getRed() + "," + c.getGreen() + "," + c.getBlue() + ",200);");
         }
     }
 

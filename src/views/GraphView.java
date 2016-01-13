@@ -127,6 +127,8 @@ public class GraphView extends JPanel {
         dsat.compute();
         dsat.colorGraph();
 
+        this.repaint();
+
         return dsat.getChromaticNumber();
     }
 
