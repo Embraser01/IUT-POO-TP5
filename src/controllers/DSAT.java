@@ -43,7 +43,7 @@ public class DSAT {
 
         while (iterator.hasNext()) {
             Node childNode = iterator.next();
-            if (!listColor.contains(childNode.getAttribute("color"))) listColor.add(childNode.getAttribute("color"));
+            if (!listColor.contains(childNode.getAttribute("dsat.color"))) listColor.add(childNode.getAttribute("dsat.color"));
         }
 
         return listColor.size();
@@ -60,7 +60,7 @@ public class DSAT {
         int tmp;
 
         for (Node n : this.nodes) {
-            if(n.getAttribute("color") == null) {
+            if(n.getAttribute("dsat.color") == null) {
                 tmp = dSat(n);
                 if (tmp > maxDSAT) {
                     maxDSatNode.clear();
@@ -113,7 +113,7 @@ public class DSAT {
 
         while (iterator.hasNext()) {
             Node n = iterator.next();
-            if (n.getAttribute("color") == null) return false;
+            if (n.getAttribute("dsat.color") == null) return false;
         }
         return true;
     }
@@ -128,7 +128,7 @@ public class DSAT {
 
 
     private void colorNode(Node n, Color c) {
-        n.addAttribute("color", c);
+        n.addAttribute("dsat.color", c);
     }
 
 
@@ -151,7 +151,7 @@ public class DSAT {
 
         while (iterator.hasNext()) {
             Node n = iterator.next();
-            Color c = n.getAttribute("color");
+            Color c = n.getAttribute("dsat.color");
             n.setAttribute("ui.style", "fill-color:rgba(" + c.getRed() + "," + c.getGreen() + "," + c.getBlue() + ",200);");
         }
     }
